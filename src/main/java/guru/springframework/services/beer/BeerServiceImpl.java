@@ -1,6 +1,6 @@
 package guru.springframework.services.beer;
 
-import guru.springframework.web.model.BeerDto;
+import guru.springframework.common.model.BeerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;

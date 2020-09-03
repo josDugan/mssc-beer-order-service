@@ -1,8 +1,8 @@
 package guru.springframework.controllers;
 
 import guru.springframework.services.BeerOrderService;
-import guru.springframework.web.model.BeerOrderDto;
-import guru.springframework.web.model.BeerOrderPagedList;
+import guru.springframework.common.model.BeerOrderDto;
+import guru.springframework.common.model.BeerOrderPagedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

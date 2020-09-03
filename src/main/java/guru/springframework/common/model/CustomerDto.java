@@ -1,4 +1,4 @@
-package guru.springframework.web.model;
+package guru.springframework.common.model;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package guru.springframework.services;
 
-import guru.springframework.web.model.BeerOrderDto;
-import guru.springframework.web.model.BeerOrderPagedList;
+import guru.springframework.common.model.BeerOrderDto;
+import guru.springframework.common.model.BeerOrderPagedList;
 import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;

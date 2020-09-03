@@ -1,4 +1,4 @@
-package guru.springframework.sm;
+package guru.springframework.sm.config;
 
 import guru.springframework.domain.BeerOrderEventEnum;
 import guru.springframework.domain.BeerOrderStatusEnum;

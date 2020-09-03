@@ -1,4 +1,4 @@
-package guru.springframework.web.model;
+package guru.springframework.common.model;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

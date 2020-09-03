@@ -1,4 +1,4 @@
-package guru.springframework.web.model;
+package guru.springframework.common.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,19 +12,24 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class BeerDto extends BaseItem {
+public class BeerOrderLineDto extends BaseItem {
 
+    private String upc;
     private String beerName;
     private String beerStyle;
-    private String upc;
+    private UUID beerId;
+    private Integer orderQuantity = 0;
     private BigDecimal price;
 
     @Builder
-    public BeerDto(UUID id, Integer version, OffsetDateTime createdDate, OffsetDateTime lastModifiedDate, String beerName, String beerStyle, String upc, BigDecimal price) {
+    public BeerOrderLineDto(UUID id, Integer version, OffsetDateTime createdDate, OffsetDateTime lastModifiedDate,
+                            String upc, String beerName, String beerStyle, UUID beerId, Integer orderQuantity, BigDecimal price) {
         super(id, version, createdDate, lastModifiedDate);
+        this.upc = upc;
         this.beerName = beerName;
         this.beerStyle = beerStyle;
-        this.upc = upc;
+        this.beerId = beerId;
+        this.orderQuantity = orderQuantity;
         this.price = price;
     }
 }

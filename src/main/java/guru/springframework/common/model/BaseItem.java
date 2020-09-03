@@ -1,4 +1,4 @@
-package guru.springframework.web.model;
+package guru.springframework.common.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
