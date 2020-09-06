@@ -10,6 +10,7 @@ import org.springframework.jms.support.converter.MessageType;
 public class JMSConfig {
 
     public static final String BEER_ORDER_SERVICE_QUEUE = "beer-order-service-queue";
+    public static final String VALIDATE_ORDER_QUEUE = "validate-order";
 
     @Bean
     public MessageConverter messageConverter() {
