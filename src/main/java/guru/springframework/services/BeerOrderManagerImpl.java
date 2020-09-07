@@ -1,5 +1,6 @@
 package guru.springframework.services;
 
+import guru.springframework.common.events.ValidateBeerOrderResult;
 import guru.springframework.domain.BeerOrder;
 import guru.springframework.domain.BeerOrderEventEnum;
 import guru.springframework.domain.BeerOrderStatusEnum;
@@ -13,6 +14,8 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
@@ -32,6 +35,17 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         sendBeerOrderEvent(savedBeerOrder, BeerOrderEventEnum.VALIDATE_ORDER);
 
         return savedBeerOrder;
+    }
+
+    @Override
+    public void processBeerOrderValidation(UUID orderId, Boolean isValid) {
+        BeerOrder beerOrder = beerOrderRepository.getOne(orderId);
+
+        if (isValid) {
+            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_PASSED);
+        } else {
+            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATE_ORDER);
+        }
     }
 
     private void sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEvent) {
