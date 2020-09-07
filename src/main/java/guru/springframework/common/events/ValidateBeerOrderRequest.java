@@ -1,4 +1,4 @@
-package guru.springframework.common.model.events;
+package guru.springframework.common.events;
 
 import guru.springframework.common.model.BeerOrderDto;
 import lombok.AllArgsConstructor;

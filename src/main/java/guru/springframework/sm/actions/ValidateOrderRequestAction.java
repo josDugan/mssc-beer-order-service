@@ -1,6 +1,6 @@
 package guru.springframework.sm.actions;
 
-import guru.springframework.common.model.events.ValidateBeerOrderRequest;
+import guru.springframework.common.events.ValidateBeerOrderRequest;
 import guru.springframework.config.JMSConfig;
 import guru.springframework.domain.BeerOrder;
 import guru.springframework.domain.BeerOrderEventEnum;
