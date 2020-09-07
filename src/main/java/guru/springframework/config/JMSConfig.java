@@ -15,6 +15,7 @@ public class JMSConfig {
     public static final String BEER_ORDER_SERVICE_QUEUE = "beer-order-service-queue";
     public static final String VALIDATE_ORDER_QUEUE = "validate-order";
     public static final String VALIDATE_ORDER_RESULT_QUEUE = "validate-order-result";
+    public static final String ALLOCATE_ORDER_QUEUE = "allocate-order";
 
     @Bean
     public MessageConverter messageConverter(ObjectMapper objectMapper) {
