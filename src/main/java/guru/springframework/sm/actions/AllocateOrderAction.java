@@ -1,5 +1,6 @@
 package guru.springframework.sm.actions;
 
+import guru.springframework.common.events.AllocateBeerOrderRequest;
 import guru.springframework.config.JMSConfig;
 import guru.springframework.domain.BeerOrder;
 import guru.springframework.domain.BeerOrderEventEnum;
@@ -30,7 +31,9 @@ public class AllocateOrderAction implements Action<BeerOrderStatusEnum, BeerOrde
              String beerOrderId = (String) stateContext.getMessage().getHeaders().get(BeerOrderStateMachineConfig.BEER_ORDER_ID_HEADER);
              BeerOrder beerOrder = beerOrderRepository.findOneById(UUID.fromString(beerOrderId));
 
-             jmsTemplate.convertAndSend(JMSConfig.ALLOCATE_ORDER_QUEUE, beerOrderMapper.beerOrderToDto(beerOrder));
+             jmsTemplate.convertAndSend(JMSConfig.ALLOCATE_ORDER_QUEUE,
+                     AllocateBeerOrderRequest.builder().beerOrderDto(
+                            beerOrderMapper.beerOrderToDto(beerOrder)).build());
 
              log.debug("Sent Allocation Request for order id: " + beerOrderId);
     }
