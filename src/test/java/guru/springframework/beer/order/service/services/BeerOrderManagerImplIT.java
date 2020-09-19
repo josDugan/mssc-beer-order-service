@@ -1,5 +1,6 @@
 package guru.springframework.beer.order.service.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jenspiegsa.wiremockextension.WireMockExtension;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -76,10 +77,7 @@ public class BeerOrderManagerImplIT {
 
     @Test
     void testNewToAllocate() throws Exception {
-        BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
-
-        wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + UPC)
-                .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+        mockGetBeerByUpc();
 
         BeerOrder beerOrder = createBeerOrder();
 
@@ -105,6 +103,41 @@ public class BeerOrderManagerImplIT {
             assertEquals(line.getOrderQuantity(), line.getQuantityAllocated());
         });
     }
+
+    @Test
+    void testNewToPickedUp() throws JsonProcessingException {
+        mockGetBeerByUpc();
+
+        BeerOrder beerOrder = createBeerOrder();
+
+        BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
+
+        await().untilAsserted(() -> {
+            BeerOrder foundBeerOrder = beerOrderRepository.findById(savedBeerOrder.getId()).get();
+
+            assertEquals(BeerOrderStatusEnum.ALLOCATED, foundBeerOrder.getOrderStatus());
+        });
+
+        beerOrderManager.beerOrderPickup(savedBeerOrder.getId());
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+            assertEquals(BeerOrderStatusEnum.PICKED_UP, foundOrder.getOrderStatus());
+        });
+
+        BeerOrder pickedUpOrder = beerOrderRepository.findById(savedBeerOrder.getId()).get();
+
+        assertNotNull(pickedUpOrder);
+        assertEquals(BeerOrderStatusEnum.PICKED_UP, pickedUpOrder.getOrderStatus());
+    }
+
+    private void mockGetBeerByUpc() throws JsonProcessingException {
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
+
+        wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + UPC)
+                .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+    }
+
 
     BeerOrder createBeerOrder() {
         BeerOrder beerOrder = BeerOrder.builder()

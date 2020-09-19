@@ -71,7 +71,6 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         }, () -> log.debug("BeerOrder not found for id: " + beerOrderDto.getId()));
     }
 
-
     @Override
     public void beerOrderAllocationPendingInventory(BeerOrderDto beerOrderDto) {
         Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(beerOrderDto.getId());
@@ -89,6 +88,22 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
         beerOrderOptional.ifPresentOrElse(beerOrder -> sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.ALLOCATION_FAILED),
                 () -> log.debug("BeerOrder not found for id: " + beerOrderDto.getId()));
+    }
+
+    @Override
+    public void beerOrderPickUp(BeerOrderDto beerOrderDto) {
+        Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(beerOrderDto.getId());
+
+        beerOrderOptional.ifPresentOrElse(beerOrder -> sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.BEERORDER_PICKED_UP),
+                () -> log.debug("BeerOrder not found for id: " + beerOrderDto.getId()));
+    }
+
+    @Override
+    public void beerOrderPickup(UUID beerOrderId) {
+        Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(beerOrderId);
+
+        beerOrderOptional.ifPresentOrElse(beerOrder -> sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.BEERORDER_PICKED_UP),
+                () -> log.debug("BeerOrder not found for id: " + beerOrderId));
     }
 
     private void updateAllocatedQty(BeerOrderDto beerOrderDto) {
