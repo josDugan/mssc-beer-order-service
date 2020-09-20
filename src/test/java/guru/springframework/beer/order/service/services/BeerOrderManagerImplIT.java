@@ -20,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
-import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -153,7 +152,6 @@ public class BeerOrderManagerImplIT {
         wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + UPC)
                 .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
     }
-
 
     BeerOrder createBeerOrder() {
         BeerOrder beerOrder = BeerOrder.builder()

@@ -119,7 +119,6 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
             });
             beerOrderRepository.saveAndFlush(allocatedOrder);
         }, () -> log.debug("Allocated Beer Order not found: " + beerOrderDto.getId()));
-
     }
 
     private void    sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEvent) {
