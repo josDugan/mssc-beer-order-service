@@ -162,6 +162,22 @@ public class BeerOrderManagerImplIT {
         });
     }
 
+    @Test
+    void testPartialAllocation() throws JsonProcessingException {
+        mockGetBeerByUpc();
+
+        BeerOrder beerOrder = createBeerOrder();
+        beerOrder.setCustomerRef("partial-allocation");
+
+        BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+
+            assertEquals(BeerOrderStatusEnum.PENDING_INVENTORY, foundOrder.getOrderStatus());
+        });
+    }
+
     private void mockGetBeerByUpc() throws JsonProcessingException {
         BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
 

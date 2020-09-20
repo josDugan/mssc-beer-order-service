@@ -21,6 +21,7 @@ public class BeerOrderAllocationListener {
     public void listen(Message msg) {
         AllocateBeerOrderRequest request = (AllocateBeerOrderRequest) msg.getPayload();
         boolean allocationError = false;
+        boolean pendingInventory = false;
 
         request.getBeerOrderDto().getBeerOrderLines().forEach(beerOrderLineDto -> {
             beerOrderLineDto.setQuantityAllocated(beerOrderLineDto.getOrderQuantity());
@@ -32,10 +33,14 @@ public class BeerOrderAllocationListener {
             allocationError = true;
         }
 
+        if ("partial-allocation".equals(request.getBeerOrderDto().getCustomerRef())) {
+            pendingInventory = true;
+        }
+
         jmsTemplate.convertAndSend(JMSConfig.ALLOCATE_ORDER_RESULT_QUEUE,
                 AllocateBeerOrderResponse.builder()
                         .allocationError(allocationError)
-                        .pendingInventory(false)
+                        .pendingInventory(pendingInventory)
                         .beerOrderDto(request.getBeerOrderDto())
                         .build());
     }
