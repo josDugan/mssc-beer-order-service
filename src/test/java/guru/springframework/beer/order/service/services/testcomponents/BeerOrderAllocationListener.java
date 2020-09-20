@@ -20,6 +20,7 @@ public class BeerOrderAllocationListener {
     @JmsListener(destination = JMSConfig.ALLOCATE_ORDER_QUEUE)
     public void listen(Message msg) {
         AllocateBeerOrderRequest request = (AllocateBeerOrderRequest) msg.getPayload();
+        boolean allocationError = false;
 
         request.getBeerOrderDto().getBeerOrderLines().forEach(beerOrderLineDto -> {
             beerOrderLineDto.setQuantityAllocated(beerOrderLineDto.getOrderQuantity());
@@ -27,9 +28,13 @@ public class BeerOrderAllocationListener {
 
         log.debug("test component beer order allocation listener ###########################");
 
+        if ("fail-allocation".equals(request.getBeerOrderDto().getCustomerRef())) {
+            allocationError = true;
+        }
+
         jmsTemplate.convertAndSend(JMSConfig.ALLOCATE_ORDER_RESULT_QUEUE,
                 AllocateBeerOrderResponse.builder()
-                        .allocationError(false)
+                        .allocationError(allocationError)
                         .pendingInventory(false)
                         .beerOrderDto(request.getBeerOrderDto())
                         .build());
