@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jenspiegsa.wiremockextension.WireMockExtension;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import guru.springframework.brewery.model.BeerDto;
+import guru.springframework.beer.order.service.config.JMSConfig;
 import guru.springframework.beer.order.service.domain.BeerOrder;
 import guru.springframework.beer.order.service.domain.BeerOrderLine;
 import guru.springframework.beer.order.service.domain.BeerOrderStatusEnum;
@@ -12,6 +12,8 @@ import guru.springframework.beer.order.service.domain.Customer;
 import guru.springframework.beer.order.service.repositories.BeerOrderRepository;
 import guru.springframework.beer.order.service.repositories.CustomerRepository;
 import guru.springframework.beer.order.service.services.beer.BeerServiceImpl;
+import guru.springframework.brewery.events.FailedBeerOrderAllocationRequest;
+import guru.springframework.brewery.model.BeerDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.core.JmsTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,6 +52,9 @@ public class BeerOrderManagerImplIT {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    JmsTemplate jmsTemplate;
 
     @Autowired
     WireMockServer wireMockServer;
@@ -159,6 +165,13 @@ public class BeerOrderManagerImplIT {
             BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
 
             assertEquals(BeerOrderStatusEnum.ALLOCATION_EXCEPTION, foundOrder.getOrderStatus());
+        });
+
+        await().untilAsserted(() -> {
+            FailedBeerOrderAllocationRequest request = (FailedBeerOrderAllocationRequest)
+                    jmsTemplate.receiveAndConvert(JMSConfig.ALLOCATION_FAILURE_QUEUE);
+
+            assertEquals(beerOrder.getId().toString(), request.getBeerOrderId());
         });
     }
 
