@@ -20,6 +20,10 @@ public class BeerOrderValidationListener {
     @JmsListener(destination = JMSConfig.VALIDATE_ORDER_QUEUE)
     public void listen(Message msg) {
         ValidateBeerOrderRequest request = (ValidateBeerOrderRequest) msg.getPayload();
+        if ("cancel-order-validation-pending".equals(request.getBeerOrderDto().getCustomerRef())) {
+            return;
+        }
+
         boolean isValid = true;
 
         if ("fail-validation".equals(request.getBeerOrderDto().getCustomerRef())) {

@@ -20,4 +20,6 @@ public interface BeerOrderManager {
     void beerOrderPickUp(BeerOrderDto beerOrderDto);
 
     void beerOrderPickup(UUID beerOrderId);
+
+    void cancelBeerOrder(UUID beerOrderId);
 }

@@ -20,6 +20,9 @@ public class BeerOrderAllocationListener {
     @JmsListener(destination = JMSConfig.ALLOCATE_ORDER_QUEUE)
     public void listen(Message msg) {
         AllocateBeerOrderRequest request = (AllocateBeerOrderRequest) msg.getPayload();
+        if ("cancel-order-allocation".equals(request.getBeerOrderDto().getCustomerRef())) {
+            return;
+        }
         boolean allocationError = false;
         boolean pendingInventory = false;
 
