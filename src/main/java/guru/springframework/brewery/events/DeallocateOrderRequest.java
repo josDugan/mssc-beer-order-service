@@ -13,5 +13,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class DeallocateOrderRequest implements Serializable {
+
+    private static final long serialVersionUID = -1420705941747553228L;
+
     private BeerOrderDto beerOrderDto;
 }
