@@ -42,7 +42,7 @@
             </providers>
         </encoder>
     </appender>
-    ​
+
     <root level="INFO">
         <appender-ref ref="jsonConsole"/>
     </root>
